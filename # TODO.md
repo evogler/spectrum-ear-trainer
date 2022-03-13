@@ -14,11 +14,13 @@
   - Option to select min and max frequency
 - Do a bit of overall visual design
 - Show upload progress bar
-- Disable play button til uploaded
+- Fix button widths
 
 # In Progress
-- Fix look of sliders
 
 # Done
 - Fix upload container appearance
 - Play/pause
+- Fix look of sliders
+- Disable play button til uploaded
+- Fix disabled slider width

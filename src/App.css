@@ -82,3 +82,10 @@ button {
   text-align: left;
   display: inline-block;
 }
+
+.slider-input-filler {
+  display: inline-block;
+  margin-left: 8px;
+  margin-right: 8px;
+  width: 300px;
+}

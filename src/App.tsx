@@ -17,20 +17,24 @@ const Slider = ({ label, minVal, maxVal, value, setValue, showValue = true }: IS
   return (
     <div className="slider">
       <label className="slider-label">{label}</label>
-      {showValue &&
-        <input
-          className='slider-input'
-          type="range"
-          min={minVal}
-          max={maxVal}
-          step={(maxVal - minVal) / 1000}
-          value={value}
-          onChange={({ target }) => {
-            const val = Number(target.value);
-            setValue(val);
-          }}
-        />}
-      {showValue && (<span className="slider-value">{value}</span>)}
+      {showValue ?
+        <>
+          <input
+            className='slider-input'
+            type="range"
+            min={minVal}
+            max={maxVal}
+            step={(maxVal - minVal) / 1000}
+            value={value}
+            onChange={({ target }) => {
+              const val = Number(target.value);
+              setValue(val);
+            }}
+          />
+          <span className="slider-value">{value}</span>
+        </>
+        : <div className='slider-input-filler' />
+      }
     </div>)
 }
 
@@ -130,9 +134,11 @@ function App() {
         <div className='buttons'>
           {playing
             ? <button onClick={pause}>Pause</button>
-            : <button onClick={play}>Play</button>
+            : <button onClick={play} disabled={!isLoaded}>Play</button>
           }
-          <button onClick={randomFreq}>{showFreq ? "Random Freq" : "Show Freq"}</button>
+          <button onClick={randomFreq} disabled={!isLoaded}>
+            {showFreq ? "Random Freq" : "Show Freq"}
+          </button>
         </div>
         <div className="sliders">
           <Slider
