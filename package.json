@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "scp -r dist/* ericvogler@ericvogler.com:/home/ericvogler/spectrum.ericvogler.com/"
   },
   "dependencies": {
     "@uppy/core": "^2.1.5",

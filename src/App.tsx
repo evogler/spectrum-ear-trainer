@@ -1,31 +1,23 @@
 import { useEffect, useState } from 'react'
-import logo from './logo.svg'
 import Uppy from '@uppy/core'
-
 import './App.css'
 import DragDrop from '@uppy/drag-drop'
 import Tus from '@uppy/tus'
 
 interface ISlider {
-  node: AudioNode | null,
   label: string,
   minVal: number,
   maxVal: number,
-  initialVal: number,
   value: number,
-  showValue: boolean,
+  showValue?: boolean,
   setValue: (val: number) => void,
 }
 
-const Slider = ({ node, label, minVal, maxVal, value, setValue, showValue=true }: ISlider) => {
-  useEffect(() => {
-    if (node) {
-      node.value = value;
-    }
-  }, [value]);
+const Slider = ({ label, minVal, maxVal, value, setValue, showValue=true }: ISlider) => {
   return (
     <div>
       <label>{label}</label>
+      {showValue &&
       <input
         type="range"
         style={{ width: '500px' }}
@@ -37,7 +29,7 @@ const Slider = ({ node, label, minVal, maxVal, value, setValue, showValue=true }
           const val = Number(target.value);
           setValue(val);
         }}
-      />
+      />}
       {showValue && (<span>{value}</span>)}
     </div>)
 }
@@ -52,6 +44,8 @@ function App() {
   const [playing, setPlaying] = useState(false);
   const [gainVal, setGainVal] = useState(0.5);
   const [freqVal, setFreqVal] = useState(1000);
+  const [eqGainVal, setEqGainVan] = useState(20);
+  const [qVal, setQVal] = useState(1);
   const [showFreq, setShowFreq] = useState(true);
 
   useEffect(() => {
@@ -67,15 +61,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    window.eq = eq;
     eq.type = 'peaking';
-    eq.frequency.value = 1000;
-    eq.gain.value = 20;
-    eq.Q.value = 1;
-
-    window.gain = gainNode;
+    eq.frequency.value = freqVal;
+    eq.Q.value = qVal;
+    eq.gain.value = eqGainVal;
     gainNode.gain.value = gainVal;
-  }, []);
+  }, [gainVal, freqVal, qVal, eqGainVal]);
 
   const play = async () => {
     // if (playing) {
@@ -111,7 +102,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+
         <div className="for-DragDrop"></div>
+
         <button onClick={play}>Play</button>
         <button onClick={randomFreq}>{showFreq ? "Random Freq" : "Show Freq"}</button>
         <Slider
@@ -119,16 +112,26 @@ function App() {
           maxVal={2}
           value={gainVal}
           setValue={setGainVal}
-          node={gainNode.gain}
           label="vol" />
         <Slider label="freq"
           minVal={20}
           maxVal={5000}
-          initialVal={1000}
           value={freqVal}
           setValue={setFreqVal}
           showValue={showFreq}
-          node={eq.frequency} />
+        />
+        <Slider label="q"
+          minVal={0.1}
+          maxVal={10}
+          value={qVal}
+          setValue={setQVal}
+        />
+        <Slider label="eqGain"
+          minVal={-30}
+          maxVal={30}
+          value={eqGainVal}
+          setValue={setEqGainVan}
+        />
       </header>
     </div>
   )
