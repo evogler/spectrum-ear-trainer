@@ -1,5 +1,5 @@
 # TODO
-- Fix upload container appearance
+
 - Make upload container request audio files only
 - Play/pause
 - Make sure you can upload a new file
@@ -17,3 +17,7 @@
   - Option to select min and max frequency
 - Do a bit of overall visual design
 
+# In Progress
+- Fix upload container appearance
+
+# Done
