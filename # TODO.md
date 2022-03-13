@@ -1,5 +1,6 @@
 # TODO
 - Make upload container request audio files only
+- Make upload container text "drop an audio file here"
 - Make sure you can upload a new file
   - Possibly keep old files too
   - Bonus: keep uploads in local storage

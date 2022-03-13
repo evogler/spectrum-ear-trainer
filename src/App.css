@@ -42,7 +42,7 @@
 
 button {
   font-size: calc(10px + 2vmin);
-  margin: 3px;
+  margin: 5px;
 }
 
 .uppy-DragDrop-label {
@@ -56,7 +56,15 @@ button {
 .buttons {
   display: flex;
   justify-content: center;
-  margin: 5px;
+  margin: 8px;
+}
+
+.play-pause-button {
+  width: 100px;
+}
+
+.freq-button {
+  width: 190px;
 }
 
 .sliders {

@@ -64,8 +64,6 @@ function App() {
       load(data);
       console.log('file uploaded', data.size);
     });
-
-    window.context = context;
   }, []);
 
   useEffect(() => {
@@ -76,7 +74,7 @@ function App() {
     gainNode.gain.value = gainVal;
   }, [gainVal, freqVal, qVal, eqGainVal]);
 
-  const load = async (data) => {
+  const load = async (data: Blob | File) => {
     const buffer = await context.decodeAudioData(await data.arrayBuffer());
     setSongBuffer(buffer);
 
@@ -87,7 +85,6 @@ function App() {
     newPlayNode.loop = true;
     newPlayNode.playbackRate.value = 0;
     newPlayNode.start();
-    window.newPlayNode = newPlayNode;
     newPlayNode.connect(gainNode);
     gainNode.connect(eq);
     eq.connect(context.destination);
@@ -125,51 +122,43 @@ function App() {
     eq.frequency.value = freq;
   };
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <div className="upload-container">
-          <div className="for-DragDrop uppy-DragDrop-container"></div>
-        </div>
-        <div className='buttons'>
-          {playing
-            ? <button onClick={pause}>Pause</button>
-            : <button onClick={play} disabled={!isLoaded}>Play</button>
-          }
-          <button onClick={randomFreq} disabled={!isLoaded}>
-            {showFreq ? "Random Freq" : "Show Freq"}
-          </button>
-        </div>
-        <div className="sliders">
-          <Slider
-            minVal={0}
-            maxVal={2}
-            value={gainVal}
-            setValue={setGainVal}
-            label="vol" />
-          <Slider label="freq"
-            minVal={20}
-            maxVal={5000}
-            value={freqVal}
-            setValue={setFreqVal}
-            showValue={showFreq}
-          />
-          <Slider label="q"
-            minVal={0.1}
-            maxVal={10}
-            value={qVal}
-            setValue={setQVal}
-          />
-          <Slider label="eqGain"
-            minVal={-30}
-            maxVal={30}
-            value={eqGainVal}
-            setValue={setEqGainVan}
-          />
-        </div>
-      </header>
-    </div>
-  )
+    return (
+      <div className="App">
+        <header className="App-header">
+          <div className="upload-container">
+            <div className="for-DragDrop uppy-DragDrop-container"></div>
+          </div>
+          <div className='buttons'>
+            {playing
+              ? <button className="play-pause-button" onClick={pause}>Pause</button>
+              : <button className="play-pause-button" onClick={play} disabled={!isLoaded}>Play</button>
+            }
+            <button className="freq-button" onClick={randomFreq} disabled={!isLoaded}>
+              {showFreq ? "Random Freq" : "Show Freq"}
+            </button>
+          </div>
+          <div className="sliders">
+            <Slider label="vol"
+              minVal={0} maxVal={2}
+              value={gainVal} setValue={setGainVal}
+            />
+            <Slider label="q"
+              minVal={0.1} maxVal={10}
+              value={qVal} setValue={setQVal}
+            />
+            <Slider label="eqGain"
+              minVal={-30} maxVal={30}
+              value={eqGainVal} setValue={setEqGainVan}
+            />
+            <Slider label="freq"
+              minVal={20} maxVal={5000}
+              value={freqVal} setValue={setFreqVal}
+              showValue={showFreq}
+            />
+          </div>
+        </header>
+      </div>
+    )
 }
 
 export default App
