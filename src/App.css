@@ -52,3 +52,33 @@ button {
 .upload-container {
   margin-bottom: 6px;
 }
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin: 5px;
+}
+
+.sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.slider-input {
+  width: 200px;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.slider-label {
+  text-align: right;
+  display: inline-block;
+  width: 100px;
+}
+
+.slider-value {
+  width: 100px;
+  text-align: left;
+  display: inline-block;
+}

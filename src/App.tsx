@@ -15,12 +15,12 @@ interface ISlider {
 
 const Slider = ({ label, minVal, maxVal, value, setValue, showValue = true }: ISlider) => {
   return (
-    <div>
-      <label>{label}</label>
+    <div className="slider">
+      <label className="slider-label">{label}</label>
       {showValue &&
         <input
+          className='slider-input'
           type="range"
-          style={{ width: '500px' }}
           min={minVal}
           max={maxVal}
           step={(maxVal - minVal) / 1000}
@@ -30,7 +30,7 @@ const Slider = ({ label, minVal, maxVal, value, setValue, showValue = true }: IS
             setValue(val);
           }}
         />}
-      {showValue && (<span>{value}</span>)}
+      {showValue && (<span className="slider-value">{value}</span>)}
     </div>)
 }
 
@@ -127,38 +127,40 @@ function App() {
         <div className="upload-container">
           <div className="for-DragDrop uppy-DragDrop-container"></div>
         </div>
-        <div>
+        <div className='buttons'>
           {playing
             ? <button onClick={pause}>Pause</button>
             : <button onClick={play}>Play</button>
           }
           <button onClick={randomFreq}>{showFreq ? "Random Freq" : "Show Freq"}</button>
         </div>
-        <Slider
-          minVal={0}
-          maxVal={2}
-          value={gainVal}
-          setValue={setGainVal}
-          label="vol" />
-        <Slider label="freq"
-          minVal={20}
-          maxVal={5000}
-          value={freqVal}
-          setValue={setFreqVal}
-          showValue={showFreq}
-        />
-        <Slider label="q"
-          minVal={0.1}
-          maxVal={10}
-          value={qVal}
-          setValue={setQVal}
-        />
-        <Slider label="eqGain"
-          minVal={-30}
-          maxVal={30}
-          value={eqGainVal}
-          setValue={setEqGainVan}
-        />
+        <div className="sliders">
+          <Slider
+            minVal={0}
+            maxVal={2}
+            value={gainVal}
+            setValue={setGainVal}
+            label="vol" />
+          <Slider label="freq"
+            minVal={20}
+            maxVal={5000}
+            value={freqVal}
+            setValue={setFreqVal}
+            showValue={showFreq}
+          />
+          <Slider label="q"
+            minVal={0.1}
+            maxVal={10}
+            value={qVal}
+            setValue={setQVal}
+          />
+          <Slider label="eqGain"
+            minVal={-30}
+            maxVal={30}
+            value={eqGainVal}
+            setValue={setEqGainVan}
+          />
+        </div>
       </header>
     </div>
   )
