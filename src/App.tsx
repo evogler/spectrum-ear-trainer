@@ -13,34 +13,35 @@ interface ISlider {
   setValue: (val: number) => void,
 }
 
-const Slider = ({ label, minVal, maxVal, value, setValue, showValue=true }: ISlider) => {
+const Slider = ({ label, minVal, maxVal, value, setValue, showValue = true }: ISlider) => {
   return (
     <div>
       <label>{label}</label>
       {showValue &&
-      <input
-        type="range"
-        style={{ width: '500px' }}
-        min={minVal}
-        max={maxVal}
-        step={(maxVal - minVal) / 1000}
-        value={value}
-        onChange={({ target }) => {
-          const val = Number(target.value);
-          setValue(val);
-        }}
-      />}
+        <input
+          type="range"
+          style={{ width: '500px' }}
+          min={minVal}
+          max={maxVal}
+          step={(maxVal - minVal) / 1000}
+          value={value}
+          onChange={({ target }) => {
+            const val = Number(target.value);
+            setValue(val);
+          }}
+        />}
       {showValue && (<span>{value}</span>)}
     </div>)
 }
 
 function App() {
-  const [audioData, setAudioData] = useState<File | Blob | null>(null);
   const [uppy, setUppy] = useState(new Uppy({ autoProceed: true, debug: true }));
   const [context, setContext] = useState<AudioContext>(new AudioContext());
   const [songBuffer, setSongBuffer] = useState<AudioBuffer | null>(null);
+  const [playNode, setPlayNode] = useState<AudioBufferSourceNode | null>(null);
   const [eq, setEQ] = useState<BiquadFilterNode>(context.createBiquadFilter());
   const [gainNode, setGainNode] = useState<GainNode>(context.createGain());
+  const [isLoaded, setIsLoaded] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [gainVal, setGainVal] = useState(0.5);
   const [freqVal, setFreqVal] = useState(1000);
@@ -55,9 +56,12 @@ function App() {
       retryDelays: [0, 1000, 3000, 5000],
     })
     uppy.on('complete', (result) => {
-      setAudioData(result.successful[0].data);
-      console.log('file uploaded', audioData?.size);
+      const data = result.successful[0].data;
+      load(data);
+      console.log('file uploaded', data.size);
     });
+
+    window.context = context;
   }, []);
 
   useEffect(() => {
@@ -68,25 +72,43 @@ function App() {
     gainNode.gain.value = gainVal;
   }, [gainVal, freqVal, qVal, eqGainVal]);
 
+  const load = async (data) => {
+    const buffer = await context.decodeAudioData(await data.arrayBuffer());
+    setSongBuffer(buffer);
+
+    const newPlayNode = context.createBufferSource();
+    setPlayNode(newPlayNode);
+    newPlayNode.buffer = buffer;
+    newPlayNode.connect(gainNode);
+    newPlayNode.loop = true;
+    newPlayNode.playbackRate.value = 0;
+    newPlayNode.start();
+    window.newPlayNode = newPlayNode;
+    newPlayNode.connect(gainNode);
+    gainNode.connect(eq);
+    eq.connect(context.destination);
+
+    setIsLoaded(true);
+    console.log('loaded');
+  };
+
   const play = async () => {
-    // if (playing) {
-    //   return;
-    // }
-    if (!audioData) {
+    setPlaying(true);
+    context.resume();
+    if (!isLoaded || !playNode) {
       console.log('no audio data');
       return;
     }
-    setPlaying(true);
-    context.resume();
-    setSongBuffer(await context.decodeAudioData(await audioData.arrayBuffer()));
-    const mySource = context.createBufferSource();
-    mySource.buffer = songBuffer;
-    mySource.connect(gainNode);
-    gainNode.connect(eq);
-    eq.connect(context.destination);
-    mySource.loop = true;
-    mySource.start();
-  };
+    playNode.playbackRate.value = 1;
+    console.log('playing');
+  }
+
+  const pause = () => {
+    setPlaying(false);
+    if (playNode) {
+      playNode.playbackRate.value = 0;
+    }
+  }
 
   const randomFreq = () => {
     if (!showFreq) {
@@ -102,11 +124,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-
-        <div className="for-DragDrop"></div>
-
-        <button onClick={play}>Play</button>
-        <button onClick={randomFreq}>{showFreq ? "Random Freq" : "Show Freq"}</button>
+        <div className="upload-container">
+          <div className="for-DragDrop uppy-DragDrop-container"></div>
+        </div>
+        <div>
+          {playing
+            ? <button onClick={pause}>Pause</button>
+            : <button onClick={play}>Play</button>
+          }
+          <button onClick={randomFreq}>{showFreq ? "Random Freq" : "Show Freq"}</button>
+        </div>
         <Slider
           minVal={0}
           maxVal={2}

@@ -42,8 +42,13 @@
 
 button {
   font-size: calc(10px + 2vmin);
+  margin: 3px;
 }
 
 .uppy-DragDrop-label {
   color: #666;
+}
+
+.upload-container {
+  margin-bottom: 6px;
 }

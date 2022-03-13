@@ -1,7 +1,5 @@
 # TODO
-
 - Make upload container request audio files only
-- Play/pause
 - Make sure you can upload a new file
   - Possibly keep old files to
   - Bonus: keep uploads in local storage
@@ -16,8 +14,11 @@
   - Round freqencies to ~2 meaningful digits
   - Option to select min and max frequency
 - Do a bit of overall visual design
+- Show upload progress bar
+- Disable play button til uploaded
 
 # In Progress
-- Fix upload container appearance
 
 # Done
+- Fix upload container appearance
+- Play/pause
